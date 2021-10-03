@@ -1,0 +1,31 @@
+.base-button {
+  user-select: none;
+  background: none;
+  border: none;
+
+  &:disabled {
+    pointer-events: none;
+    color: #C1C1C1;
+  }
+
+  &:hover {
+    cursor: pointer;
+    color: darken($color: #9B51E0, $amount: 10);
+  }
+
+  &:active {
+    transform: scale(.95);
+  }
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 24px;
+
+  text-align: right;
+  text-transform: uppercase;
+
+  color: #9B51E0;
+  transition: all 0.2s;
+}
