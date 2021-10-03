@@ -106,6 +106,10 @@ export default {
 
   &__small {
     width: 350px;
+
+    @media (max-width: 780px) {
+      width: 100%;
+    }
   }
 
   &__large {
