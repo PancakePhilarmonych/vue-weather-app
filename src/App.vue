@@ -1,20 +1,22 @@
 <template>
   <div id="app">
     <WeatherApp/>
-    <!-- <NewWeatherButton/> -->
-    <AddNewCityModal/>
+    <AddCityButton/>
+    <AddCityModal/>
   </div>
 </template>
 
 <script>
 import WeatherApp from '../src/views/WeatherApp.vue'
-import AddNewCityModal from './components/AddCityModal.vue'
+import AddCityModal from './components/AddCityModal.vue'
+import AddCityButton from './components/AddCityButton.vue'
 
 export default {
   name: 'App',
   components: {
     WeatherApp,
-    AddNewCityModal
+    AddCityModal,
+    AddCityButton
   }
 }
 </script>
