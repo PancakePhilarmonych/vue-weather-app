@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <WeatherApp/>
-    <AddCityButton/>
-    <AddCityModal/>
+    <AddCityButton @click="openModal"/>
+    <AddCityModal ref="add-city-modal"/>
   </div>
 </template>
 
@@ -13,10 +13,17 @@ import AddCityButton from './components/AddCityButton.vue'
 
 export default {
   name: 'App',
+
   components: {
     WeatherApp,
     AddCityModal,
     AddCityButton
+  },
+
+  methods: {
+    openModal () {
+      this.$refs['add-city-modal'].openModal()
+    }
   }
 }
 </script>

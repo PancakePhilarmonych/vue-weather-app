@@ -38,7 +38,7 @@ export default {
 
   data () {
     return {
-      show: true
+      show: false
     }
   },
 
@@ -56,6 +56,7 @@ export default {
 
 <style lang="scss" scoped>
   .backdrop {
+    padding: 24px;
     position: fixed;
     display: flex;
     width: 100%;

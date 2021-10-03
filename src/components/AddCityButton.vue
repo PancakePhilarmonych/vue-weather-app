@@ -1,12 +1,16 @@
 <template>
-  <button class="add-city-button">
+  <button @click="onClick" class="add-city-button">
     +
   </button>
 </template>
 
 <script>
 export default {
-
+  methods: {
+    onClick () {
+      this.$emit('click')
+    }
+  }
 }
 </script>
 
@@ -19,8 +23,8 @@ export default {
     bottom: 20px;
     right: 20px;
 
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
 
     border: none;
     background: #9B51E0;
