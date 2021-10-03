@@ -9,15 +9,24 @@
         description-text="To find city start typing and pick one from the suggestions"/>
 
       <body>
-        <base-input/>
+        <base-input v-model="cityName"/>
       </body>
 
       <footer>
-        <base-button disabled inner-text="Clear"/>
+        <base-button
+          :disabled="!cityName"
+          @click="clearCityName"
+          inner-text="Clear"/>
 
         <div class="right-buttons">
-          <base-button inner-text="Cancel" @click="closeModal"/>
-          <base-button disabled inner-text="Add"/>
+          <base-button
+            inner-text="Cancel"
+            @click="closeModal"/>
+
+          <base-button
+            :disabled="!cityName"
+            @click="getCityWeatherInfo"
+            inner-text="Add"/>
         </div>
       </footer>
     </div>
@@ -28,6 +37,7 @@
 import BaseInput from './Base/BaseInput.vue'
 import BaseButton from './Base/BaseButton.vue'
 import BaseHeader from './Base/BaseHeader.vue'
+import api from '../services/api.js'
 
 export default {
   components: {
@@ -38,7 +48,8 @@ export default {
 
   data () {
     return {
-      show: false
+      show: false,
+      cityName: ''
     }
   },
 
@@ -49,6 +60,36 @@ export default {
 
     closeModal () {
       this.show = false
+    },
+
+    clearCityName () {
+      this.cityName = ''
+    },
+
+    getCityWeatherInfo () {
+      api.getCityWeather({ q: this.cityName, units: 'metric' })
+        .then(response => console.log(response))
+
+      // var axios = require('axios').default
+
+      // var options = {
+      //   method: 'GET',
+      //   url: 'https://community-open-weather-map.p.rapidapi.com/weather',
+      //   params: {
+      //     q: this.cityName,
+      //     units: 'metric'
+      //   },
+      //   headers: {
+      //     'x-rapidapi-host': 'community-open-weather-map.p.rapidapi.com',
+      //     'x-rapidapi-key': 'ba4325f6a6msha272ceb97485ce3p143fbcjsn2fed1cd0eb0b'
+      //   }
+      // }
+
+      // axios.request(options).then(function (response) {
+      //   console.log(response.data)
+      // }).catch(function (error) {
+      //   console.error(error)
+      // })
     }
   }
 }
