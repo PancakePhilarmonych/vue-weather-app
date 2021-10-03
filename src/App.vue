@@ -8,7 +8,7 @@
 
 <script>
 import WeatherApp from '../src/views/WeatherApp.vue'
-import AddNewCityModal from './components/NewCityModal.vue'
+import AddNewCityModal from './components/AddCityModal.vue'
 
 export default {
   name: 'App',

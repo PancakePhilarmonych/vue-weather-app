@@ -1,22 +1,25 @@
 <template>
-  <div class="weather-card-preview" :class="CardSizeClass">
-    <header>
-      <h2>Moscow, RU</h2>
-      <p>Your current location</p>
-    </header>
+  <div
+    class="weather-card"
+    :class="CardSizeClass">
+
+    <base-header
+      headerText="Moscow, RU"
+      descriptionText="Your current location"/>
 
     <body>
-      <div class="row">
-        <p class="title">Weather</p>
-        <p class="info">Clouds</p>
-      </div>
-      <div class="row">
-        <p class="title">Temperature</p>
-        <p class="info">7 °C</p>
-      </div>
-      <div class="row">
-        <p class="title">Humidity</p>
-        <p class="info">45 %</p>
+      <div class="weather-info">
+        <base-row
+          titleText="Weather"
+          infoText="Clouds"/>
+
+        <base-row
+          titleText="Temperature"
+          infoText="7 °C"/>
+
+        <base-row
+          titleText="Humidity"
+          infoText="45 %"/>
       </div>
 
       <div class="refresh-time">
@@ -26,13 +29,18 @@
 
     <footer>
       <base-button inner-text="Reload"/>
-      <base-button v-if="canBeRemoved" inner-text="Remove"/>
+
+      <base-button
+        v-if="canBeRemoved"
+        inner-text="Remove"/>
     </footer>
   </div>
 </template>
 
 <script>
-import BaseButton from '../BaseButton.vue'
+import BaseRow from './Base/BaseRow.vue'
+import BaseButton from './Base/BaseButton.vue'
+import BaseHeader from './Base/BaseHeader.vue'
 
 export default {
   props: {
@@ -48,12 +56,14 @@ export default {
   },
 
   components: {
-    BaseButton
+    BaseButton,
+    BaseRow,
+    BaseHeader
   },
 
   computed: {
     CardSizeClass () {
-      return `weather-card-preview__${this.size}`
+      return `weather-card__${this.size}`
     }
   }
 
@@ -61,8 +71,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.weather-card-preview {
-  background: white;
+.weather-card {
   padding: 24px;
   background: #FFFFFF;
   box-shadow: 0px 2px 10px rgba(10, 10, 10, 0.25);
@@ -70,44 +79,19 @@ export default {
   height: 393px;
 
   header {
-    h2 {
-      margin-bottom: 15px;
-
-      font-weight: bold;
-      font-size: 32px;
-      line-height: 38px;
-
-      color: #1B1B1B;
-    }
-
-    p {
-      font-family: Lato;
-      font-size: 18px;
-      line-height: 24px;
-
-      color: #1B1B1B;
-    }
-
     margin-bottom: 40px;
   }
 
   body {
-    .row {
-      display: flex;
-      justify-content: space-between;
-      padding: 16px 0 12px 0;
-      border-bottom: 1px solid #C4C4C4;
+    .weather-info {
+      margin-bottom: 8px;
     }
 
     .refresh-time {
       display: flex;
       justify-content: flex-end;
-
-      margin-top: 8px;
-
       font-size: 16px;
       line-height: 24px;
-
       color: #A8A8A8;
     }
 
