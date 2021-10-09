@@ -19,6 +19,7 @@ export default {
     cursor: pointer;
     color: white;
     position: fixed;
+    font-size: 24px;
 
     bottom: 20px;
     right: 20px;

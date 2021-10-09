@@ -11,23 +11,24 @@
         <base-input
           v-validate="'onlyLetters|required'"
           name="city"
-          v-model="cityName"
+          v-model="name"
           :error="errors.first('city')"/>
       </body>
 
       <footer>
         <base-button
-          :disabled="!cityName"
-          @click="clearCityName"
+          :disabled="!name"
+          :danger="!!name"
+          @click="clearName"
           inner-text="Clear"/>
 
-        <div class="right-buttons">
+        <div class="right-side-buttons">
           <base-button
             inner-text="Cancel"
             @click="closeModal"/>
 
           <base-button
-            :disabled="!cityName"
+            :disabled="!name"
             @click="getCityWeatherInfo"
             inner-text="Add"/>
         </div>
@@ -52,12 +53,12 @@ export default {
   data () {
     return {
       show: false,
-      cityName: ''
+      name: ''
     }
   },
 
   methods: {
-    ...mapActions(['getWeatherInfo']),
+    ...mapActions(['getWeatherByCity']),
 
     openModal () {
       this.show = true
@@ -67,13 +68,13 @@ export default {
       this.show = false
     },
 
-    clearCityName () {
-      this.cityName = ''
+    clearName () {
+      this.name = ''
     },
 
     getCityWeatherInfo () {
       this.closeModal()
-      this.getWeatherInfo({ city: this.cityName, action: 'add' })
+      this.getWeatherByCity({ city: this.name, action: 'add' })
     }
   }
 }
@@ -118,7 +119,7 @@ export default {
         display: flex;
         justify-content: space-between;
 
-        .right-buttons {
+        .right-side-buttons {
           :last-child {
             margin-left: 31px;
           }

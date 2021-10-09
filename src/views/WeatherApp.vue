@@ -4,42 +4,92 @@
       <h1>
         World Weather
       </h1>
-      <p class="main-descriptionn">
-        Watch weather in your current location
-      </p>
     </header>
 
     <body>
-      <weather-card v-if="currentCity.length" size="large"/>
+      <div class="current-location-card">
+        <template v-if="currentPositionWeather" >
+          <p class="description">
+            Watch weather in your current location
+          </p>
+          <weather-card
+            current-location-card
+            size="large"
+            :key="currentPositionWeather.name"
+            :name="currentPositionWeather.name"
+            :country="currentPositionWeather.country"
+            :weather="currentPositionWeather.weather"
+            :humidity="currentPositionWeather.humidity.toString()"
+            :temperature="currentPositionWeather.temperature"
+            :created-date="currentPositionWeather.created_date"
+            @onReloadClickHandler="updateCard"/>
+        </template>
+
+          <base-button
+            v-else
+            inner-text="Get Current Position Weather"
+            @click="getPositionAndWeather">
+          </base-button>
+      </div>
+
+      <div class="all-cards">
+        <weather-card
+          v-for="city in cities"
+          :key="city.name"
+          :name="city.name"
+          :country="city.country"
+          :weather="city.weather"
+          :humidity="city.humidity.toString()"
+          :temperature="city.temperature"
+          :created-date="city.created_date"
+          size="small"
+          @onReloadClickHandler="updateCard"/>
+      </div>
     </body>
-    <footer>
-      <weather-card
-        v-for="city in cities"
-        :key="city.name"
-        :name="city.name"
-        :country="city.country"
-        :weather="city.weather"
-        :humidity="city.humidity.toString()"
-        :temperature="city.temperature"
-        :created-date="city.created_date"
-        size="small"/>
-    </footer>
   </div>
 </template>
 
 <script>
 import WeatherCard from '../components/WeatherCard.vue'
-import { mapState } from 'vuex'
+import BaseButton from '../components/Base/BaseButton.vue'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'App',
 
   components: {
-    WeatherCard
+    WeatherCard,
+    BaseButton
+  },
+
+  data () {
+    return {
+      lat: 0,
+      long: 0
+    }
+  },
+
+  methods: {
+    ...mapActions(['getWeatherByCity', 'getWeatherByPosition', 'removeCityByName']),
+
+    updateCard ({ currentLocationCard = false, name = '' }) {
+      currentLocationCard
+        ? this.getPositionAndWeather()
+        : this.getWeatherByCity({ city: name, action: 'update' })
+    },
+
+    getPositionAndWeather () {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude.toFixed(2)
+        const lon = position.coords.longitude.toFixed(2)
+
+        this.getWeatherByPosition({ lat, lon })
+      })
+    }
   },
 
   computed: {
-    ...mapState(['cities', 'currentCity'])
+    ...mapState(['cities', 'currentPositionWeather'])
   }
 }
 </script>
@@ -60,15 +110,6 @@ export default {
         font-size: 70px;
         line-height: 80px;
         color: #1B1B1B;
-        margin-bottom: 32px;
-      }
-
-      .main-descriptionn {
-        font-weight: normal;
-        font-size: 24px;
-        line-height: 24px;
-
-        color: #767676;
       }
 
       margin-bottom: 22px;
@@ -76,27 +117,51 @@ export default {
 
     body {
       width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-bottom: 77px;
-    }
 
-    footer {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      gap: 40px;
+      .current-location-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 77px;
 
-      @media (min-width: 1224px) and (max-width: 1580px) {
-        grid-template-columns: 1fr 1fr 1fr;
+        .description {
+          text-align: center;
+          font-family: Lato;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 24px;
+          line-height: 24px;
+
+          color: #767676;
+
+          margin-bottom: 25px;
+        }
       }
 
-      @media (min-width: 400px) and (max-width: 1224px) {
-        grid-template-columns: 1fr 1fr;
-      }
+      .all-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 40px;
 
-      @media (max-width: 780px) {
-        grid-template-columns: 1fr;
-        width: 100%;
+        & > * {
+          margin: auto;
+        }
+
+        @media (min-width: 1224px) and (max-width: 1580px) {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        @media (min-width: 400px) and (max-width: 1224px) {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        @media (max-width: 780px) {
+          grid-template-columns: 1fr;
+          width: 100%;
+        }
+
+        padding-bottom: 70px;
       }
     }
   }
