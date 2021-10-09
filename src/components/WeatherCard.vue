@@ -1,25 +1,25 @@
 <template>
   <div
     class="weather-card"
-    :class="cardSizeClass">
+    :class="cardSize">
 
     <base-header
-      :headerText="`${name}, ${country}`"
-      descriptionText="Your current location"/>
+      :headerText="cardTitle"
+      :descriptionText="cardDescription"/>
 
     <body>
       <div class="weather-info">
         <base-row
           titleText="Weather"
-          :infoText="weather"/>
+          :descriptionText="weather"/>
 
         <base-row
           titleText="Temperature"
-          :infoText="`${Math.floor(temperature)} °C`"/>
+          :descriptionText="`${Math.floor(temperature)} °C`"/>
 
         <base-row
           titleText="Humidity"
-          :infoText="humidity"/>
+          :descriptionText="humidity"/>
       </div>
 
       <div :key="timeSince" class="refresh-time">
@@ -30,7 +30,7 @@
     <footer>
       <base-button
         inner-text="Reload"
-        @click="updateCard"/>
+        @click="onReloadClick"/>
 
       <base-button
         v-if="canBeRemoved"
@@ -42,7 +42,7 @@
 
 <script>
 import { DateTime } from 'luxon'
-import { mapActions } from 'vuex'
+import { mapMutations } from 'vuex'
 
 import BaseRow from './Base/BaseRow.vue'
 import BaseButton from './Base/BaseButton.vue'
@@ -52,42 +52,42 @@ export default {
   props: {
     name: {
       type: String,
-      required: true
+      default: 'None'
     },
 
     country: {
       type: String,
-      required: true
+      default: 'None'
     },
 
     weather: {
       type: String,
-      required: true
+      default: 'None'
     },
 
     humidity: {
       type: String,
-      required: true
+      default: '0 %'
     },
 
     temperature: {
       type: Number,
-      required: true
+      default: 0
     },
 
     createdDate: {
       type: String,
-      required: true
+      default: Date.now().toString()
+    },
+
+    currentLocationCard: {
+      type: Boolean,
+      default: false
     },
 
     size: {
       type: String,
       default: 'small'
-    },
-
-    canBeRemoved: {
-      type: Boolean,
-      default: false
     }
   },
 
@@ -112,20 +112,43 @@ export default {
   },
 
   computed: {
-    cardSizeClass () {
+    cardSize () {
       return `weather-card__${this.size}`
+    },
+
+    canBeRemoved () {
+      return !this.currentLocationCard
+    },
+
+    cardTitle () {
+      return this.currentLocationCard
+        ? `${this.name}, ${this.country}`
+        : this.name
+    },
+
+    cardDescription () {
+      return this.currentLocationCard
+        ? 'Your current location'
+        : this.getRegionName(this.country)
     }
   },
 
   methods: {
-    ...mapActions(['getWeatherInfo', 'removeCityByName']),
+    ...mapMutations(['remove']),
 
-    updateCard () {
-      this.getWeatherInfo({ city: this.name, action: 'update' })
+    onReloadClick () {
+      this.$emit('onReloadClickHandler', {
+        currentLocationCard: this.currentLocationCard,
+        name: this.name
+      })
+    },
+
+    getRegionName (name) {
+      return new Intl.DisplayNames(['en'], { type: 'region' }).of(name)
     },
 
     removeCard () {
-      this.removeCityByName(this.name)
+      this.remove(this.name)
     },
 
     updateTimeSince () {
@@ -188,10 +211,6 @@ export default {
     width: 824px;
 
     @media (max-width: 860px) {
-      width: 740px;
-    }
-
-    @media (max-width: 780px) {
       width: 100%;
     }
   }
