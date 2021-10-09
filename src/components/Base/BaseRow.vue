@@ -1,7 +1,7 @@
 <template>
   <div class="base-row">
     <p class="title">{{ titleText }}</p>
-    <p class="info">{{ infoText }}</p>
+    <p class="info">{{ descriptionText }}</p>
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
       required: true
     },
 
-    infoText: {
+    descriptionText: {
       type: String,
       required: true
     }
