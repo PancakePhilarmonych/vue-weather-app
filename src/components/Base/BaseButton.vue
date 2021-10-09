@@ -1,7 +1,8 @@
 <template>
   <button
     @click="onClick"
-    class="base-button">
+    class="base-button"
+    :class="classes">
     {{ innerText }}
   </button>
 </template>
@@ -12,6 +13,17 @@ export default {
     innerText: {
       type: String,
       default: 'Button'
+    },
+
+    danger: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  computed: {
+    classes () {
+      return { danger: this.danger }
     }
   },
 
