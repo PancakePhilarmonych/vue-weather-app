@@ -25,8 +25,8 @@
             @onReloadClickHandler="updateCard"/>
         </template>
 
+        <template v-else>
           <base-button
-            v-else
             inner-text="Get Current Position Weather"
             @click="getPositionAndWeather">
           </base-button>
@@ -34,6 +34,7 @@
           <span class="warning">
             only for secure origins
           </span>
+        </template>
       </div>
 
       <div class="all-cards">

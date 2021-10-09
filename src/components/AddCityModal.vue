@@ -74,6 +74,7 @@ export default {
 
     getCityWeatherInfo () {
       this.closeModal()
+      this.name = ''
       this.getWeatherByCity({ city: this.name, action: 'add' })
     }
   }
