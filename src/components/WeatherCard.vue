@@ -1,49 +1,85 @@
 <template>
   <div
     class="weather-card"
-    :class="CardSizeClass">
+    :class="cardSizeClass">
 
     <base-header
-      headerText="Moscow, RU"
+      :headerText="`${name}, ${country}`"
       descriptionText="Your current location"/>
 
     <body>
       <div class="weather-info">
         <base-row
           titleText="Weather"
-          infoText="Clouds"/>
+          :infoText="weather"/>
 
         <base-row
           titleText="Temperature"
-          infoText="7 °C"/>
+          :infoText="`${Math.floor(temperature)} °C`"/>
 
         <base-row
           titleText="Humidity"
-          infoText="45 %"/>
+          :infoText="humidity"/>
       </div>
 
-      <div class="refresh-time">
-        7 minutes ago
+      <div :key="timeSince" class="refresh-time">
+        {{ timeSince }}
       </div>
     </body>
 
     <footer>
-      <base-button inner-text="Reload"/>
+      <base-button
+        inner-text="Reload"
+        @click="updateCard"/>
 
       <base-button
         v-if="canBeRemoved"
+        @click="removeCard"
         inner-text="Remove"/>
     </footer>
   </div>
 </template>
 
 <script>
+import { DateTime } from 'luxon'
+import { mapActions } from 'vuex'
+
 import BaseRow from './Base/BaseRow.vue'
 import BaseButton from './Base/BaseButton.vue'
 import BaseHeader from './Base/BaseHeader.vue'
 
 export default {
   props: {
+    name: {
+      type: String,
+      required: true
+    },
+
+    country: {
+      type: String,
+      required: true
+    },
+
+    weather: {
+      type: String,
+      required: true
+    },
+
+    humidity: {
+      type: String,
+      required: true
+    },
+
+    temperature: {
+      type: Number,
+      required: true
+    },
+
+    createdDate: {
+      type: String,
+      required: true
+    },
+
     size: {
       type: String,
       default: 'small'
@@ -61,9 +97,45 @@ export default {
     BaseHeader
   },
 
+  data () {
+    return {
+      timeSince: ''
+    }
+  },
+
+  mounted () {
+    this.updateTimeSince()
+
+    setInterval(() => {
+      this.updateTimeSince()
+    }, 60000)
+  },
+
   computed: {
-    CardSizeClass () {
+    cardSizeClass () {
       return `weather-card__${this.size}`
+    }
+  },
+
+  methods: {
+    ...mapActions(['getWeatherInfo', 'removeCityByName']),
+
+    updateCard () {
+      this.getWeatherInfo({ city: this.name, action: 'update' })
+    },
+
+    removeCard () {
+      this.removeCityByName(this.name)
+    },
+
+    updateTimeSince () {
+      this.timeSince = DateTime.fromISO(this.createdDate).toRelative()
+    }
+  },
+
+  watch: {
+    createdDate (newValue) {
+      this.updateTimeSince()
     }
   }
 

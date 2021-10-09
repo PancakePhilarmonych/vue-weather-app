@@ -10,24 +10,36 @@
     </header>
 
     <body>
-      <weather-card size="large"/>
+      <weather-card v-if="currentCity.length" size="large"/>
     </body>
     <footer>
-      <weather-card size="small"/>
-      <weather-card size="small"/>
-      <weather-card size="small"/>
-      <weather-card size="small"/>
+      <weather-card
+        v-for="city in cities"
+        :key="city.name"
+        :name="city.name"
+        :country="city.country"
+        :weather="city.weather"
+        :humidity="city.humidity.toString()"
+        :temperature="city.temperature"
+        :created-date="city.created_date"
+        size="small"/>
     </footer>
   </div>
 </template>
 
 <script>
 import WeatherCard from '../components/WeatherCard.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
+
   components: {
     WeatherCard
+  },
+
+  computed: {
+    ...mapState(['cities', 'currentCity'])
   }
 }
 </script>
