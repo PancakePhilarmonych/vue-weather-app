@@ -30,6 +30,10 @@
             inner-text="Get Current Position Weather"
             @click="getPositionAndWeather">
           </base-button>
+
+          <span class="warning">
+            only for secure origins
+          </span>
       </div>
 
       <div class="all-cards">
@@ -137,6 +141,10 @@ export default {
 
           margin-bottom: 25px;
         }
+      }
+
+      .warning {
+        color: rgb(199, 199, 199)
       }
 
       .all-cards {
