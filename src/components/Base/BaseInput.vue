@@ -1,10 +1,17 @@
 <template>
-  <input
+  <div class="base-input">
+    <input
       v-model="copyValue"
-      class="base-input"
+      :class="classes"
       :type="type"
       :disabled="disabled"
       :placeholder="placeholder">
+
+      <span class="error-message">
+        {{ error }}
+      </span>
+  </div>
+
 </template>
 
 <script>
@@ -28,6 +35,11 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+
+    error: {
+      type: String,
+      default: ''
     }
   },
 
@@ -36,9 +48,14 @@ export default {
       get () {
         return this.value
       },
+
       set (newValue) {
         this.$emit('input', newValue)
       }
+    },
+
+    classes () {
+      return { error: this.error }
     }
   }
 
@@ -47,17 +64,30 @@ export default {
 
 <style lang="scss" scoped>
   .base-input {
-    width: 100%;
-    height: 40px;
+    position: relative;
 
-    padding-bottom: 16px;
+    input {
+      width: 100%;
+      height: 40px;
+      outline: none;
+      border: none;
+      font-size: 24px;
+      line-height: 24px;
+      color: #1B1B1B;
+      border-bottom: 1px solid #1B1B1B;
+      padding-bottom: 16px;
 
-    outline: none;
-    border: none;
-    border-bottom: 1px solid #1B1B1B;
+      &.error {
+        border-bottom: 1px solid #FF0101;
+      }
+    }
 
-    font-size: 24px;
-    line-height: 24px;
-    color: #1B1B1B;
+    >.error-message {
+      color: red;
+      top: 50px;
+      left: 0px;
+      position: absolute;
+    }
+
   }
 </style>

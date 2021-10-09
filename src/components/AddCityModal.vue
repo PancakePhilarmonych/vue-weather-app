@@ -7,9 +7,12 @@
       <base-header
         header-text="Choose a city"
         description-text="To find city start typing and pick one from the suggestions"/>
-
       <body>
-        <base-input v-model="cityName"/>
+        <base-input
+          v-validate="'onlyLetters|required'"
+          name="city"
+          v-model="cityName"
+          :error="errors.first('city')"/>
       </body>
 
       <footer>
@@ -37,7 +40,7 @@
 import BaseInput from './Base/BaseInput.vue'
 import BaseButton from './Base/BaseButton.vue'
 import BaseHeader from './Base/BaseHeader.vue'
-import api from '../services/api.js'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -54,6 +57,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['getWeatherInfo']),
+
     openModal () {
       this.show = true
     },
@@ -67,29 +72,8 @@ export default {
     },
 
     getCityWeatherInfo () {
-      api.getCityWeather({ q: this.cityName, units: 'metric' })
-        .then(response => console.log(response))
-
-      // var axios = require('axios').default
-
-      // var options = {
-      //   method: 'GET',
-      //   url: 'https://community-open-weather-map.p.rapidapi.com/weather',
-      //   params: {
-      //     q: this.cityName,
-      //     units: 'metric'
-      //   },
-      //   headers: {
-      //     'x-rapidapi-host': 'community-open-weather-map.p.rapidapi.com',
-      //     'x-rapidapi-key': 'ba4325f6a6msha272ceb97485ce3p143fbcjsn2fed1cd0eb0b'
-      //   }
-      // }
-
-      // axios.request(options).then(function (response) {
-      //   console.log(response.data)
-      // }).catch(function (error) {
-      //   console.error(error)
-      // })
+      this.closeModal()
+      this.getWeatherInfo({ city: this.cityName, action: 'add' })
     }
   }
 }
@@ -110,6 +94,7 @@ export default {
     align-items: center;
 
     .modal {
+      height: 395px;
       width: 751px;
 
       background: #FFFFFF;
@@ -125,6 +110,7 @@ export default {
       }
 
       body {
+        position: relative;
         margin-bottom: 140px;
       }
 
